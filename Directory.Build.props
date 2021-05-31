@@ -28,9 +28,13 @@
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <DefaultItemExcludes>$(DefaultItemExcludes);*.binlog</DefaultItemExcludes>
 
-    <!-- Even if created, you need mdb files to have any debug info loaded -->
     <DebugSymbols>false</DebugSymbols>
     <DebugType>none</DebugType>
+  </PropertyGroup>
+  
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <DebugType>portable</DebugType>
+    <DebugSymbols>true</DebugSymbols>
   </PropertyGroup>
   
   <!-- Shared Items -->
