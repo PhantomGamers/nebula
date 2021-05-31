@@ -205,7 +205,7 @@ namespace NebulaHost
         {
             //Generate new data for the player
             ushort playerId = GetNextAvailablePlayerId();
-            Float3 randomColor = new Float3(Random.value, Random.value, Random.value);
+            Float3 randomColor = new Float3(0f, 0f, 0f);
             PlayerData playerData = new PlayerData(playerId, -1, randomColor);
 
             Player newPlayer = new Player(conn, playerData);
