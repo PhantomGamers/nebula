@@ -1,11 +1,7 @@
 ﻿using System.Collections.Generic;
 using NebulaModel.Packets.Factory;
 
-<<<<<<< HEAD:NebulaWorld/Factory/BuildToolManager.cs
 namespace NebulaWorld.Factory
-=======
-namespace NebulaPatcher.Patches.Dynamic
->>>>>>> pr/307:NebulaPatcher/Patches/Dynamic/BuildTool_Click_Patch.cs
 {
     public class BuildToolManager
     {
