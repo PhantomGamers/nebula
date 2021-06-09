@@ -28,8 +28,8 @@
     <EnforceCodeStyleInBuild>true</EnforceCodeStyleInBuild>
     <DefaultItemExcludes>$(DefaultItemExcludes);*.binlog</DefaultItemExcludes>
 
-    <DebugSymbols>false</DebugSymbols>
-    <DebugType>none</DebugType>
+    <DebugSymbols>portable</DebugSymbols>
+    <DebugType>true</DebugType>
   </PropertyGroup>
   
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
