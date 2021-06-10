@@ -1,11 +1,10 @@
-﻿using System.Collections.Generic;
-using NebulaModel.Packets.Factory;
+﻿using NebulaModel.Packets.Factory;
+using System.Collections.Generic;
 
 namespace NebulaWorld.Factory
 {
     public class BuildToolManager
     {
-        // Is there a better way of determining which BuildTool we are sending these from?
         public static bool CreatePrebuilds(BuildTool __instance)
         {
             if (!SimulatedWorld.Initialized)
@@ -28,13 +27,19 @@ namespace NebulaWorld.Factory
                 {
                     //This code with flag was taken from original method:
                     bool flag = true;
-                    if(__instance.GetType() == typeof(BuildTool_Click) && (buildPreview.condition == EBuildCondition.Ok && buildPreview.coverObjId == 0))
+                    if (__instance.GetType() == typeof(BuildTool_Click))
                     {
-                        TakeItems(__instance, buildPreview, ref flag);
-                    }
-                    else if ((__instance.GetType() == typeof(BuildTool_Inserter) || __instance.GetType() == typeof(BuildTool_Path)) && (buildPreview.coverObjId == 0 || buildPreview.willRemoveCover))
-                    {
+                        if (buildPreview.condition == EBuildCondition.Ok && buildPreview.coverObjId == 0)
+                        {
                             TakeItems(__instance, buildPreview, ref flag);
+                        }
+                    }
+                    else if (__instance.GetType() == typeof(BuildTool_Inserter) || __instance.GetType() == typeof(BuildTool_Path))
+                    {
+                        if (buildPreview.coverObjId == 0 || buildPreview.willRemoveCover)
+                        {
+                            TakeItems(__instance, buildPreview, ref flag);
+                        }
                     }
                     if (flag)
                     {
@@ -48,7 +53,7 @@ namespace NebulaWorld.Factory
             return true;
         }
 
-        private static void TakeItems(BuildTool __instance,BuildPreview buildPreview, ref bool flag)
+        private static void TakeItems(BuildTool __instance, BuildPreview buildPreview, ref bool flag)
         {
             int id = buildPreview.item.ID;
             int num = 1;
