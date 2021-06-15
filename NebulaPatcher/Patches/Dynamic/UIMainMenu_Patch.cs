@@ -103,7 +103,7 @@ namespace NebulaPatcher.Patches.Dynamic
         {
             UIRoot.instance.CloseMainMenuUI();
             multiplayerMenu.gameObject.SetActive(true);
-            hostIPAdressInput.characterLimit = 30;
+            hostIPAdressInput.characterLimit = 255;
         }
 
         private static void OnMultiplayerBackButtonClick()
