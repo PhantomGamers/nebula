@@ -52,7 +52,7 @@ namespace NebulaHost
                     var cts = new CancellationTokenSource(5000);
                     var device = await nat.DiscoverDeviceAsync(PortMapper.Upnp, cts);
 
-                    await device.CreatePortMapAsync(new Mapping(Protocol.Tcp, port, port, int.MaxValue, ThisAssembly.AssemblyName));
+                    await device.CreatePortMapAsync(new Mapping(Protocol.Tcp, port, port, ThisAssembly.AssemblyName));
                     NebulaModel.Logger.Log.Info($"Trying to create UPNP port mapping for {port}");
                 });
                 try
@@ -66,7 +66,7 @@ namespace NebulaHost
                         NebulaModel.Logger.Log.Warn("Nat device not found");
                     }
                 }
-                if (!t.IsCanceled && !t.IsFaulted)
+                if (t.IsCanceled || t.IsFaulted)
                 {
                     NebulaModel.Logger.Log.Warn("Could not create UPNP port mapping");
                 }
