@@ -7,8 +7,11 @@ using NebulaModel.Packets.GameStates;
 using NebulaModel.Utils;
 using NebulaWorld;
 using NebulaWorld.Statistics;
+using Open.Nat;
+using System;
 using System.Net.Sockets;
-using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
 using UnityEngine;
 using WebSocketSharp;
 using WebSocketSharp.Server;
@@ -41,6 +44,34 @@ namespace NebulaHost
 
         public void StartServer(int port, bool loadSaveFile = false)
         {
+            if (NebulaModel.Config.Options.UPNP)
+            {
+                var t = Task.Run(async () =>
+                {
+                    var nat = new NatDiscoverer();
+                    var cts = new CancellationTokenSource(5000);
+                    var device = await nat.DiscoverDeviceAsync(PortMapper.Upnp, cts);
+
+                    await device.CreatePortMapAsync(new Mapping(Protocol.Tcp, port, port, int.MaxValue, ThisAssembly.AssemblyName));
+                    NebulaModel.Logger.Log.Info($"Trying to create UPNP port mapping for {port}");
+                });
+                try
+                {
+                    t.Wait();
+                }
+                catch (AggregateException e)
+                {
+                    if (e.InnerException is NatDeviceNotFoundException)
+                    {
+                        NebulaModel.Logger.Log.Warn("Nat device not found");
+                    }
+                }
+                if (!t.IsCanceled && !t.IsFaulted)
+                {
+                    NebulaModel.Logger.Log.Warn("Could not create UPNP port mapping");
+                }
+            }
+
             PlayerManager = new PlayerManager();
             if (loadSaveFile)
             {

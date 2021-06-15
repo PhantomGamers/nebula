@@ -17,6 +17,9 @@ namespace NebulaModel
         [DisplayName("Disable Advisors")]
         public bool AdvisorDisabled { get; set; } = true;
 
+        [DisplayName("UPNP")]
+        public bool UPNP {  get; set; } = true;
+
         public object Clone()
         {
             return this.MemberwiseClone();

@@ -40,6 +40,7 @@
   <!-- Shared Items -->
   <ItemGroup Label="NuGets">
     <PackageReference Include="K4os.Compression.LZ4.Streams" Version="1.2.6" />
+    <PackageReference Include="Open.NAT" Version="2.1.0" />
 
     <PackageReference Include="Microsoft.Unity.Analyzers" Version="1.11.0" PrivateAssets="all" />
     <PackageReference Include="Nerdbank.GitVersioning" Version="3.4.205" PrivateAssets="all" />
