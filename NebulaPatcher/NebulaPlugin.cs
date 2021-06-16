@@ -4,6 +4,7 @@ using NebulaModel.Logger;
 using NebulaPatcher.Logger;
 using NebulaPatcher.MonoBehaviours;
 using System;
+using System.IO;
 using UnityEngine;
 
 namespace NebulaPatcher
@@ -17,7 +18,7 @@ namespace NebulaPatcher
         void Awake()
         {
             Log.Init(new BepInExLogger(Logger));
-            
+
             NebulaModel.Config.ModInfo = Info;
             NebulaModel.Config.LoadOptions();
 
@@ -49,7 +50,22 @@ namespace NebulaPatcher
                     if (assembly.FullName.StartsWith("NebulaPatcher"))
                     {
                         Log.Info($"Applying patches from assembly: {assembly.FullName}");
+#if DEBUG
+                        if (Directory.Exists("./mmdump"))
+                        {
+                            foreach (FileInfo file in new DirectoryInfo("./mmdump").GetFiles())
+                            {
+                                file.Delete();
+                            }
+
+                            Environment.SetEnvironmentVariable("MONOMOD_DMD_TYPE", "cecil");
+                            Environment.SetEnvironmentVariable("MONOMOD_DMD_DUMP", "./mmdump");
+                        }
+#endif
                         harmony.PatchAll(assembly);
+#if DEBUG
+                        Environment.SetEnvironmentVariable("MONOMOD_DMD_DUMP", "");
+#endif
                     }
                 }
 
