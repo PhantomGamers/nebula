@@ -18,15 +18,27 @@ namespace NebulaPatcher.Patches.Dynamic
         [HarmonyPatch("CreatePrebuilds")]
         public static void CreatePrebuilds_Postfix()
         {
-            if(SimulatedWorld.Initialized && !LocalPlayer.IsMasterClient && FactoryManager.EventFromServer && FactoryManager.IsHumanInput)
+            if (SimulatedWorld.Initialized && !LocalPlayer.IsMasterClient && FactoryManager.EventFromServer && FactoryManager.IsHumanInput)
             {
                 FactoryManager.IsHumanInput = false;
             }
-            else if(SimulatedWorld.Initialized && LocalPlayer.IsMasterClient && (FactoryManager.IsHumanInput || FactoryManager.IsFromClient))
+            else if (SimulatedWorld.Initialized && LocalPlayer.IsMasterClient && (FactoryManager.IsHumanInput || FactoryManager.IsFromClient))
             {
                 FactoryManager.IsFromClient = false;
                 FactoryManager.IsHumanInput = false;
             }
+        }
+
+        [HarmonyPrefix]
+        [HarmonyPatch("CheckBuildConditions")]
+        public static bool CheckBuildConditions(ref bool __result)
+        {
+            if (FactoryManager.IgnoreBasicBuildConditionChecks)
+            {
+                __result = true;
+                return false;
+            }
+            return true;
         }
     }
 }
