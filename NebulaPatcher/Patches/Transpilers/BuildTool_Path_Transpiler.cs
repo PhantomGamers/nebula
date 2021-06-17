@@ -1,8 +1,6 @@
 ﻿using HarmonyLib;
 using NebulaModel.DataStructures;
-using NebulaModel.Logger;
 using NebulaWorld.Factory;
-using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Reflection.Emit;
@@ -65,8 +63,8 @@ namespace NebulaPatcher.Patches.Transpiler
          * - for the inventory check and ground condition check
          * - checks for presence of ore or oil, since we do not want to load colliders for remote planets
          */
-        [HarmonyTranspiler]
-        [HarmonyPatch("CheckBuildConditions")]
+        //[HarmonyTranspiler]
+        //[HarmonyPatch("CheckBuildConditions")]
         static IEnumerable<CodeInstruction> CheckBuildConditions_Transpiler(ILGenerator gen, IEnumerable<CodeInstruction> instructions)
         {
             var codes = new List<CodeInstruction>(instructions);
