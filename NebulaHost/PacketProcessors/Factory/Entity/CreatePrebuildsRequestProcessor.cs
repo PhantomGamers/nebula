@@ -27,8 +27,11 @@ namespace NebulaHost.PacketProcessors.Factory.Entity
             BuildTool buildTool = null;
             for (int i = 0; i < buildTools.Length; i++)
             {
-                if(buildTools[i].GetType().ToString() == packet.BuildToolType)
+                if (buildTools[i].GetType().ToString() == packet.BuildToolType)
+                {
                     buildTool = buildTools[i];
+                    break;
+                }
             }
             if (pab != null && buildTool != null)
             {
@@ -84,15 +87,15 @@ namespace NebulaHost.PacketProcessors.Factory.Entity
                     bool canBuild = false;
                     using (FactoryManager.IgnoreBasicBuildConditionChecks.On())
                     {
-                        if(packet.BuildToolType == typeof(BuildTool_Click).ToString())
+                        if (packet.BuildToolType == typeof(BuildTool_Click).ToString())
                         {
                             canBuild = ((BuildTool_Click)buildTool).CheckBuildConditions();
                         }
-                        else if(packet.BuildToolType == typeof(BuildTool_Path).ToString())
+                        else if (packet.BuildToolType == typeof(BuildTool_Path).ToString())
                         {
                             canBuild = ((BuildTool_Path)buildTool).CheckBuildConditions();
                         }
-                        else if(packet.BuildToolType == typeof(BuildTool_Inserter).ToString())
+                        else if (packet.BuildToolType == typeof(BuildTool_Inserter).ToString())
                         {
                             canBuild = ((BuildTool_Inserter)buildTool).CheckBuildConditions();
                         }
@@ -146,7 +149,7 @@ namespace NebulaHost.PacketProcessors.Factory.Entity
             }
         }
 
-       public void CheckAndFixConnections(BuildTool buildTool, PlanetData planet)
+        public void CheckAndFixConnections(BuildTool buildTool, PlanetData planet)
         {
             //Check and fix references to prebuilds
             Vector3 tmpVector = Vector3.zero;

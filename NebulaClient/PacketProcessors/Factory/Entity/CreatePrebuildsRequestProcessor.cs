@@ -28,7 +28,10 @@ namespace NebulaClient.PacketProcessors.Factory.Entity
             for (int i = 0; i < buildTools.Length; i++)
             {
                 if (buildTools[i].GetType().ToString() == packet.BuildToolType)
+                {
                     buildTool = buildTools[i];
+                    break;
+                }
             }
             if (pab != null && buildTool != null)
             {
@@ -96,10 +99,10 @@ namespace NebulaClient.PacketProcessors.Factory.Entity
                 // TODO: FIX THE BELOW
 
                 //Author has to call this for the continuous belt building
-/*                if (packet.AuthorId == LocalPlayer.PlayerId)
-                {
-                    pab.AfterPrebuild();
-                }*/
+                /*                if (packet.AuthorId == LocalPlayer.PlayerId)
+                                {
+                                    pab.AfterPrebuild();
+                                }*/
 
                 /* TODO: Oh *boy* is this one going to be a fun one to fix - they've actually refactored the AfterPrebuild method
                  * to happen at each of the relevant times the cmd.mode condition would have been met in every tool 
