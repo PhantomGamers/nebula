@@ -25,7 +25,7 @@ namespace NebulaClient.PacketProcessors.Factory.Entity
                     if (pab != null)
                     {
                         // Backup current factory & set factory to request planet factory
-                        var tmpFactory = pab.planet.factory;
+                        var tmpFactory = pab.factory;
                         pab.factory = planet.factory;
                         pab.noneTool.factory = planet.factory;
 
