@@ -83,11 +83,6 @@ namespace NebulaPatcher.Patches.Dynamic
                 FactoryManager.RemovePrebuildRequest(__instance.planetId, -objId);
             }
 
-            if (LocalPlayer.IsMasterClient || !FactoryManager.EventFromServer)
-            {
-                LocalPlayer.SendPacket(new DestructEntityRequest(__instance.planetId, objId, FactoryManager.PacketAuthor == -1 ? LocalPlayer.PlayerId : FactoryManager.PacketAuthor));
-            }
-
             return LocalPlayer.IsMasterClient || FactoryManager.EventFromServer;
         }
 
@@ -157,7 +152,14 @@ namespace NebulaPatcher.Patches.Dynamic
         {
             if (SimulatedWorld.Initialized && !PlanetManager.EventFromClient && !PlanetManager.EventFromServer)
             {
-                LocalPlayer.SendPacketToLocalStar(new VegeMinedPacket(GameMain.localPlanet?.id ?? -1, id, 0, true));
+                if(LocalPlayer.IsMasterClient)
+                {
+                    LocalPlayer.SendPacketToStar(new VegeMinedPacket(__instance.planetId, id, 0, true), __instance.planet.star.id);
+                }
+                else
+                {
+                    LocalPlayer.SendPacketToLocalStar(new VegeMinedPacket(__instance.planetId, id, 0, true));
+                }
             }
         }
     }

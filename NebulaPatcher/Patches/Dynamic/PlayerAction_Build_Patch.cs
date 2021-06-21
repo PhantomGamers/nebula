@@ -1,9 +1,7 @@
 ﻿using HarmonyLib;
-using NebulaModel.Logger;
 using NebulaModel.Packets.Factory;
 using NebulaWorld;
 using NebulaWorld.Factory;
-using System.Collections.Generic;
 
 namespace NebulaPatcher.Patches.Dynamic
 {
@@ -22,15 +20,27 @@ namespace NebulaPatcher.Patches.Dynamic
             {
                 LocalPlayer.SendPacket(new DestructEntityRequest(__instance.player.planetId, objId, LocalPlayer.PlayerId));
             }
+            else if(!LocalPlayer.IsMasterClient && FactoryManager.EventFromServer && !FactoryManager.EventFromClient && FactoryManager.TargetPlanet == __instance.planet.id && __instance.pathTool.ObjectIsBelt(objId))
+            {
+                LocalPlayer.SendPacket(new DestructEntityRequest(__instance.player.planetId, objId, LocalPlayer.PlayerId));
+            }
+            else if ((LocalPlayer.IsMasterClient && FactoryManager.TargetPlanet == GameMain.localPlanet?.id) || !FactoryManager.EventFromServer)
+            {
+                LocalPlayer.SendPacket(new DestructEntityRequest(FactoryManager.TargetPlanet == FactoryManager.PLANET_NONE ? __instance.planet.id : FactoryManager.TargetPlanet, objId, FactoryManager.PacketAuthor == -1 ? LocalPlayer.PlayerId : FactoryManager.PacketAuthor));
+            }
 
             return LocalPlayer.IsMasterClient || FactoryManager.EventFromServer;
         }
-      
-        //[HarmonyPrefix]
-        //[HarmonyPatch("AfterPrebuild")]
-        public static bool AfterPrebuild_Prefix()
+
+        [HarmonyPrefix]
+        [HarmonyPatch(nameof(PlayerAction_Build.SetFactoryReferences))]
+        public static bool SetFactoryReferences_Prefix()
         {
-            return !FactoryManager.EventFromServer && !FactoryManager.EventFromClient;
+            if(FactoryManager.EventFromServer || FactoryManager.EventFromClient)
+            {
+                return false;
+            }
+            return true;
         }
     }
 }
