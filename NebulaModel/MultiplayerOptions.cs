@@ -18,7 +18,7 @@ namespace NebulaModel
         public bool AdvisorDisabled { get; set; } = true;
 
         [DisplayName("UPNP")]
-        public bool UPNP {  get; set; } = true;
+        public bool UPNP {  get; set; } = false;
 
         public object Clone()
         {
