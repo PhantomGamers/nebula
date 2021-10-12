@@ -7,13 +7,13 @@ namespace NebulaModel.Networking
 {
     public class NebulaConnection : INebulaConnection
     {
-        private readonly Telepathy.Client client;
-        private readonly Telepathy.Server server;
+        private readonly kcp2k.KcpClient client;
+        private readonly kcp2k.KcpServer server;
         private readonly NetPacketProcessor packetProcessor;
         private readonly int connectionId;
         private readonly string peerAddress;
 
-        public NebulaConnection(Telepathy.Client client, Telepathy.Server server, NetPacketProcessor packetProcessor, int connectionId = -1)
+        public NebulaConnection(kcp2k.KcpClient client, kcp2k.KcpServer server, NetPacketProcessor packetProcessor, int connectionId = -1)
         {
             this.client = client;
             this.server = server;
@@ -24,13 +24,13 @@ namespace NebulaModel.Networking
 
         public void SendPacket<T>(T packet) where T : class, new()
         {
-            if (client?.Connected ?? false)
+            if (client?.connected ?? false)
             {
-                client.Send(new ArraySegment<byte>(packetProcessor.Write(packet)));
+                client.Send(new ArraySegment<byte>(packetProcessor.Write(packet)), kcp2k.KcpChannel.Reliable);
             }
-            else if (server?.Active ?? false)
+            else if (server?.IsActive() ?? false)
             {
-                server.Send(connectionId, new ArraySegment<byte>(packetProcessor.Write(packet)));
+                server.Send(connectionId, new ArraySegment<byte>(packetProcessor.Write(packet)), kcp2k.KcpChannel.Reliable);
             }
             else
             {
@@ -40,13 +40,13 @@ namespace NebulaModel.Networking
 
         public void SendRawPacket(byte[] rawData)
         {
-            if (client?.Connected ?? false)
+            if (client?.connected ?? false)
             {
-                client.Send(new ArraySegment<byte>(rawData));
+                client.Send(new ArraySegment<byte>(rawData), kcp2k.KcpChannel.Reliable);
             }
-            else if (server?.Active ?? false)
+            else if (server?.IsActive() ?? false)
             {
-                server.Send(connectionId, new ArraySegment<byte>(rawData));
+                server.Send(connectionId, new ArraySegment<byte>(rawData), kcp2k.KcpChannel.Reliable);
             }
             else
             {

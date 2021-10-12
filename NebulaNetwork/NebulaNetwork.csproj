@@ -4,6 +4,6 @@
     <ProjectReference Include="..\NebulaModel\NebulaModel.csproj" SpecificVersion="true" />
     <ProjectReference Include="..\NebulaAPI\NebulaAPI.csproj" Private="false" />
     <ProjectReference Include="..\NebulaWorld\NebulaWorld.csproj" SpecificVersion="true" />
-    <ProjectReference Include="..\dep\Telepathy\Telepathy\Telepathy.csproj" />
+    <ProjectReference Include="..\dep\kcp2k\kcp2k\Assets\kcp2k\KCP.csproj" />
   </ItemGroup>
 </Project>

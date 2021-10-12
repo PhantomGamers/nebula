@@ -1,7 +1,7 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project Sdk="Microsoft.NET.Sdk">
   <ItemGroup>
-    <ProjectReference Include="..\dep\Telepathy\Telepathy\Telepathy.csproj" />
+    <ProjectReference Include="..\dep\kcp2k\kcp2k\Assets\kcp2k\KCP.csproj" />
     <ProjectReference Include="..\NebulaAPI\NebulaAPI.csproj" Private="false" />
   </ItemGroup>
 

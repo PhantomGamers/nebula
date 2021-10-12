@@ -24,7 +24,7 @@ namespace NebulaNetwork
         private float productionStatisticsUpdateTimer = 0;
         private float dysonLaunchUpateTimer = 0;
 
-        private Telepathy.Server server;
+        private kcp2k.KcpServer server;
 
         private readonly int port;
         private readonly bool loadSaveFile;
@@ -57,18 +57,9 @@ namespace NebulaNetwork
             PacketProcessor.SimulateLatency = true;
 #endif
 
-            server = new Telepathy.Server(Config.Options.GetMaxMessageSizeInBytes())
-            {
-                OnConnected = OnConnected,
-                OnData = OnMessage,
-                OnDisconnected = OnDisconnected,
-                ReceiveTimeout = (int)TimeSpan.FromSeconds(Config.Options.Timeout).TotalMilliseconds,
-                SendTimeout = (int)TimeSpan.FromSeconds(Config.Options.Timeout).TotalMilliseconds,
-                SendQueueLimit = Config.Options.QueueLimit,
-                ReceiveQueueLimit = Config.Options.QueueLimit
-            };
+            server = new kcp2k.KcpServer(OnConnected, OnMessage, OnDisconnected, DualMode: true, NoDelay: true, Interval: 100, FastResend: 1, CongestionWindow: false, SendWindowSize: (uint)Config.Options.GetMaxMessageSizeInBytes(), (uint)Config.Options.GetMaxMessageSizeInBytes(), (int)TimeSpan.FromSeconds(Config.Options.Timeout).TotalMilliseconds);
 
-            server.Start(port);
+            server.Start((ushort)port);
 
             ((LocalPlayer)Multiplayer.Session.LocalPlayer).IsHost = true;
 
@@ -167,7 +158,7 @@ namespace NebulaNetwork
 
         public override void Update()
         {
-            server.Tick(Config.Options.PacketsPerTick * 10); // multiply by max players
+            server.Tick();
             gameStateUpdateTimer += Time.deltaTime;
             gameResearchHashUpdateTimer += Time.deltaTime;
             productionStatisticsUpdateTimer += Time.deltaTime;

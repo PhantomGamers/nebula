@@ -16,7 +16,7 @@ namespace NebulaNetwork
 {
     public class Client : NetworkProvider
     {
-        private Telepathy.Client client;
+        private kcp2k.KcpClient client;
         private const int MECHA_SYNCHONIZATION_INTERVAL = 5;
 
         private readonly IPEndPoint serverEndpoint;
@@ -52,18 +52,9 @@ namespace NebulaNetwork
 #if DEBUG
             PacketProcessor.SimulateLatency = true;
 #endif
-            client = new Telepathy.Client(Config.Options.GetMaxMessageSizeInBytes())
-            {
-                OnConnected = OnConnected,
-                OnData = OnMessage,
-                OnDisconnected = OnDisconnected,
-                ReceiveTimeout = (int)TimeSpan.FromSeconds(Config.Options.Timeout).TotalMilliseconds,
-                SendTimeout = (int)TimeSpan.FromSeconds(Config.Options.Timeout).TotalMilliseconds,
-                SendQueueLimit = Config.Options.QueueLimit,
-                ReceiveQueueLimit = Config.Options.QueueLimit
-            };
+            client = new kcp2k.KcpClient(OnConnected, OnMessage, OnDisconnected);
 
-            client.Connect(serverEndpoint.Address.ToString(), serverEndpoint.Port);
+            client.Connect(serverEndpoint.Address.ToString(), (ushort)serverEndpoint.Port, noDelay: true, interval: 100, fastResend: 1, congestionWindow: false, (uint)Config.Options.GetMaxMessageSizeInBytes(), (uint)Config.Options.GetMaxMessageSizeInBytes(), (int)TimeSpan.FromSeconds(Config.Options.Timeout).TotalMilliseconds);
 
             ((LocalPlayer)Multiplayer.Session.LocalPlayer).IsHost = false;
 
@@ -125,7 +116,7 @@ namespace NebulaNetwork
 
         public override void Update()
         {
-            client.Tick(Config.Options.PacketsPerTick);
+            client.Tick();
 
             if (Multiplayer.Session.IsGameLoaded)
             {

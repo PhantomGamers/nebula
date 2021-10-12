@@ -1,3 +1,7 @@
 [submodule "dep/Telepathy"]
 	path = dep/Telepathy
 	url = https://github.com/vis2k/Telepathy.git
+[submodule "dep/kcp2k"]
+	path = dep/kcp2k
+	url = https://github.com/PhantomGamers/kcp2k.git
+	branch = pr-fixes
